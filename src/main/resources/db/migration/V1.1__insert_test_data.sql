@@ -52,6 +52,7 @@ values (nextval('operation_id_seq'), '2024-01-01', 'TAKE', 1, 2),
        (nextval('operation_id_seq'), '2024-07-07', 'TAKE', 7, 4),
        (nextval('operation_id_seq'), '2024-08-01', 'TAKE', 11, 3);
 
+-- admin / admin user
 insert into "user"
 values (1, 'admin', '$2a$12$dLhNO41lXCJWmuGMX9UMseG.3tNTk41firOzVIwO7p12dMpwbHpuG');
 
