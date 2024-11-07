@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: "postgres:14"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "35432:5432"
+    networks:
+      - postgres
+
+  app:
+    depends_on:
+      - postgres
+    image: 'app:1.0-SNAPSHOT'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    networks:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+
+networks:
+  postgres:
+    driver: bridge
