@@ -12,13 +12,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.mal1as.librarytesttask.utils.ErrorMessages.BOOK_NOT_AVAILABLE_MESSAGE;
+import static com.mal1as.librarytesttask.utils.ErrorMessages.BOOK_NOT_FOUND_MESSAGE;
+import static com.mal1as.librarytesttask.utils.ErrorMessages.CLIENT_NOT_FOUND_MESSAGE;
+
 @Service
 @RequiredArgsConstructor
 public class OperationService {
-
-    private static final String CLIENT_NOT_FOUND_MESSAGE = "Client with id = %s not found";
-    private static final String BOOK_NOT_FOUND_MESSAGE = "Book with id = %s not found";
-    private static final String BOOK_NOT_AVAILABLE_MESSAGE = "Book with id = %s now not available";
 
     private final OperationRepository operationRepository;
     private final ClientRepository clientRepository;

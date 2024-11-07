@@ -4,6 +4,7 @@ import com.mal1as.librarytesttask.model.dto.ErrorResponse;
 import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,6 +22,15 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponse.builder()
                         .message(e.getMessage())
                         .status(HttpStatus.BAD_REQUEST.name())
+                        .build());
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(AuthenticationException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ErrorResponse.builder()
+                        .message(e.getMessage())
+                        .status(HttpStatus.UNAUTHORIZED.name())
                         .build());
     }
 

@@ -37,3 +37,10 @@ create table operation
     book_id        bigint not null references book(id),
     client_id      bigint not null references client(id)
 );
+
+create table "user"
+(
+    id bigserial primary key,
+    username varchar(32) not null unique,
+    password varchar(255) not null
+);
