@@ -11,9 +11,11 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
@@ -30,6 +32,7 @@ public class Book {
     private Long id;
 
     @Column(name = "title", nullable = false)
+    @Length(min = 1, max = 64) @NotBlank
     private String title;
 
     @Column(name = "publication_year")

@@ -17,5 +17,4 @@ public class ErrorResponse {
 
     private String message;
     private String status;
-    private String stackTrace;
 }

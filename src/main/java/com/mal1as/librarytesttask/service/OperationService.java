@@ -7,6 +7,7 @@ import com.mal1as.librarytesttask.model.enums.OperationType;
 import com.mal1as.librarytesttask.repository.BookRepository;
 import com.mal1as.librarytesttask.repository.ClientRepository;
 import com.mal1as.librarytesttask.repository.OperationRepository;
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,21 +16,33 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OperationService {
 
+    private static final String CLIENT_NOT_FOUND_MESSAGE = "Client with id = %s not found";
+    private static final String BOOK_NOT_FOUND_MESSAGE = "Book with id = %s not found";
+    private static final String BOOK_NOT_AVAILABLE_MESSAGE = "Book with id = %s now not available";
+
     private final OperationRepository operationRepository;
     private final ClientRepository clientRepository;
     private final BookRepository bookRepository;
 
     @Transactional
     public void saveOperation(Long clientId, Long bookId) {
-        Client client = clientRepository.findById(clientId).orElseThrow();
-        Book book = bookRepository.findById(bookId).orElseThrow();
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ValidationException(String.format(CLIENT_NOT_FOUND_MESSAGE, clientId)));
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new ValidationException(String.format(BOOK_NOT_FOUND_MESSAGE, bookId)));
 
-        // add check that book now available
 
-        Operation operation = operationRepository.findFirstByClientAndBookOrderByOperationDateDesc(client, book)
+        Operation lastBookOperation = operationRepository.findFirstByBookOrderByOperationDateDesc(book)
+                .orElse(null);
+        if (lastBookOperation != null && lastBookOperation.getOperationType().equals(OperationType.TAKE)
+                && !lastBookOperation.getClient().getId().equals(clientId)) {
+            throw new ValidationException(String.format(BOOK_NOT_AVAILABLE_MESSAGE, bookId));
+        }
+
+        Operation lastOperation = operationRepository.findFirstByClientAndBookOrderByOperationDateDesc(client, book)
                 .orElse(null);
         operationRepository.save(Operation.builder()
-                .operationType(operation == null || operation.getOperationType().equals(OperationType.RETURN) ?
+                .operationType(lastOperation == null || lastOperation.getOperationType().equals(OperationType.RETURN) ?
                         OperationType.TAKE : OperationType.RETURN)
                 .client(client)
                 .book(book)

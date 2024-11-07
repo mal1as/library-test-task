@@ -11,9 +11,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,12 +34,15 @@ public class Client {
     private Long id;
 
     @Column(name = "phone_number")
+    @Pattern(regexp = "^(\\s*)?(\\+)?([- _():=+]?\\d[- _():=+]?){10,14}(\\s*)?$")
     private String phoneNumber;
 
     @Column(name = "first_name", nullable = false)
+    @Length(min = 1, max = 32) @NotBlank
     private String firstName;
 
     @Column(name = "last_name", nullable = false)
+    @Length(min = 1, max = 32) @NotBlank
     private String lastName;
 
     @Enumerated(EnumType.STRING)

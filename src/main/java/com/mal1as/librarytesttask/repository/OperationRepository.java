@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface OperationRepository extends JpaRepository<Operation, Long> {
 
     Optional<Operation> findFirstByClientAndBookOrderByOperationDateDesc(Client client, Book book);
+
+    Optional<Operation> findFirstByBookOrderByOperationDateDesc(Book book);
 }
