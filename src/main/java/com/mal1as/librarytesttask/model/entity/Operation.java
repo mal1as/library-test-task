@@ -12,6 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +25,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Operation {
 
     @Id
@@ -31,11 +35,12 @@ public class Operation {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "operation_type")
+    @Column(name = "operation_type", nullable = false)
     private OperationType operationType;
 
-    @Column(name = "operation_date")
-    private LocalDateTime operationDate;
+    @Column(name = "operation_date", nullable = false)
+    @Builder.Default
+    private LocalDateTime operationDate = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id", referencedColumnName = "id")
